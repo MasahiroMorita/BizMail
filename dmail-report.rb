@@ -7,7 +7,9 @@ require 'tmail-util'
 require 'biz_mail_processor.rb'
 
 $MYDOMAIN = 'dmail.pgw.jp'
-$BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
+#$BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
+$BIZMAIL_DIR = '/home/hiropipi/bizmail/'
+
 $CONFIG_YAML = $BIZMAIL_DIR + 'config.yaml'
 $DBFILE = $BIZMAIL_DIR + 'dbfile.sqlite3'
 
@@ -22,10 +24,10 @@ rep_mail = processor.generate_report_mail
 exit unless rep_mail
 rep_mail.smtp_server = 'localhost'
 rep_mail.write_back
-#rep_mail.send_mail
+rep_mail.send_mail
 
 comb_rep_mail = processor.generate_combined_report_mail
 exit unless comb_rep_mail
 comb_rep_mail.smtp_server = 'localhost'
 comb_rep_mail.write_back
-#comb_rep_mail.send_mail
+comb_rep_mail.send_mail
