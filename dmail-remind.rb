@@ -1,5 +1,7 @@
 #!/usr/bin/ruby
 
+$LOAD_PATH.push(File.dirname($0))
+
 require 'rubygems'
 require 'biz_mail_reminder.rb'
 
