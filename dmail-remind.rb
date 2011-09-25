@@ -1,11 +1,7 @@
 #!/usr/bin/ruby
 
 require 'rubygems'
-require 'date'
-require 'date-util'
-require 'tmail'
-require 'tmail-util'
-require 'biz_mail_processor.rb'
+require 'biz_mail_reminder.rb'
 
 $MYDOMAIN = 'dmail.pgw.jp'
 $BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
@@ -14,21 +10,16 @@ $BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
 $CONFIG_YAML = $BIZMAIL_DIR + 'config.yaml'
 $DBFILE = $BIZMAIL_DIR + 'dbfile.sqlite3'
 
-mail_msg = STDIN.read
-rec_mail = TMail::Mail.parse(mail_msg)
+reminder = BizMailReminder.new(ARGV[0])
 
-processor = BizMailProcessor.new
-processor.parse_mail(rec_mail.from, rec_mail.to,
-                     rec_mail.date, NKF.nkf("--utf8", rec_mail.subject), NKF.nkf("--utf8", rec_mail.body))
-
-processor.generate_report_mail do |tmail|
+reminder.remind_to_person do |tmail|
   tmail.smtp_server = 'localhost'
   tmail.write_back
   puts NKF.nkf('--utf8', tmail.encoded)
   #tmail.send_mail
 end
 
-processor.generate_combined_report_mail do |tmail|
+reminder.remind_for_kpi do |tmail|
   tmail.smtp_server = 'localhost'
   tmail.write_back
   puts NKF.nkf('--utf8', tmail.encoded)

@@ -22,6 +22,10 @@ class Date
   def to_mmddaaa
     self.strftime("%m/%d") + "(" + self.wday_name + ")"
   end
+  
+  def to_YYYYMMDD
+    self.strftime("%Y%m%d")
+  end
 end
 
 class DateTime

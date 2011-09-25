@@ -47,7 +47,7 @@ class BizMailProcessor
     bizlog_context.insert(bizlog)
   end
   
-  def generate_report_mail
+  def generate_report_mail(&block)
     tmail = TMail::Mail.new
     tmail.content_type = 'text/plain'
     tmail.charset = 'iso-2022-jp'
@@ -76,10 +76,11 @@ class BizMailProcessor
     tmail.to = to_addr_substitute(@current_config['report_to'], @report_from)
     tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('-j', subject).split(//, 1).pack('m').chomp + '?='
     tmail.body = NKF.nkf("--jis", body)
-    return tmail
+    
+    block.call(tmail)
   end
   
-  def generate_combined_report_mail
+  def generate_combined_report_mail(&block)
     tmail = TMail::Mail.new
     tmail.content_type = 'text/plain'
     tmail.charset = 'iso-2022-jp'
@@ -110,7 +111,8 @@ class BizMailProcessor
     tmail.to = to_addr_substitute(@current_config['report_to'], @report_from)
     tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('-j', subject).split(//, 1).pack('m').chomp + '?='
     tmail.body = NKF.nkf("--jis", body)
-    return tmail
+    
+    block.call(tmail)
   end
   
   def to_addr_substitute(to_addrs, from)
