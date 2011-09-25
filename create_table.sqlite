@@ -1,0 +1,20 @@
+
+create table biz_log_storage (
+	id integer primary key,
+	date text not null,
+	timestamp text not null,
+	user_id text not null,
+	person_id text,
+	kpi_id text,
+	value real not null,
+	memo text
+);
+
+create table biz_target_storage (
+	id integer primary key,
+	date text not null,
+	user_id text not null,
+	person_id text,
+	kpi_id text,
+	value real not null
+);
