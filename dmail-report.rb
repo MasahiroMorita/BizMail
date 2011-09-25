@@ -1,4 +1,6 @@
-#!/usr/bin/ruby
+#!/usr/local/bin/ruby
+
+$LOAD_PATH.push(File.dirname($0))
 
 require 'rubygems'
 require 'date'
@@ -8,8 +10,8 @@ require 'tmail-util'
 require 'biz_mail_processor.rb'
 
 $MYDOMAIN = 'dmail.pgw.jp'
-$BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
-#$BIZMAIL_DIR = '/home/hiropipi/bizmail/'
+#$BIZMAIL_DIR = '/Users/hiropipi/Documents/workspace/BizMail/'
+$BIZMAIL_DIR = '/home/hiropipi/bizmail/BizMail/'
 
 $CONFIG_YAML = $BIZMAIL_DIR + 'config.yaml'
 $DBFILE = $BIZMAIL_DIR + 'dbfile.sqlite3'
@@ -24,13 +26,13 @@ processor.parse_mail(rec_mail.from, rec_mail.to,
 processor.generate_report_mail do |tmail|
   tmail.smtp_server = 'localhost'
   tmail.write_back
-  puts NKF.nkf('--utf8', tmail.encoded)
-  #tmail.send_mail
+  #puts NKF.nkf('--utf8', tmail.encoded)
+  tmail.send_mail
 end
 
 processor.generate_combined_report_mail do |tmail|
   tmail.smtp_server = 'localhost'
   tmail.write_back
-  puts NKF.nkf('--utf8', tmail.encoded)
-  #tmail.send_mail
+  #puts NKF.nkf('--utf8', tmail.encoded)
+  tmail.send_mail
 end
