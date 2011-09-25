@@ -18,20 +18,20 @@ class BizMailReminder
   end
   
   def remind_to_person(&block)
-    tmail = TMail::Mail.new
-    tmail.content_type = 'text/plain'
-    tmail.charset = 'iso-2022-jp'
-    tmail.date = Time.now
-    
     return if @current_config['type'] != 'aggregated_persons'
     
     @current_config['remind_to'].each do |k, v|
+      tmail = TMail::Mail.new
+      tmail.content_type = 'text/plain'
+      tmail.charset = 'iso-2022-jp'
+      tmail.date = Time.now
+      kpi_id = ''
       @current_config['kpi'].each do |_k, _v|
-        kpi = _k
+        kpi_id = _k
         @kpi = _v
       end
-      
-      tmail.from = @report_user + '+' + [date.to_YYYYMMDD, kpi, k].join('-') + '@' + $MYDOMAIN
+
+      tmail.from = [@report_user + '+' + [date.to_YYYYMMDD, kpi_id, k].join('-') + '@' + $MYDOMAIN]
       tmail.reply_to = tmail.from
 
       @person = @current_config['person'][k]
@@ -49,13 +49,18 @@ class BizMailReminder
   
   def remind_for_kpi(&block)
     return if @current_config['type'] == 'aggregated_persons'
-    
+
+    tmail = TMail::Mail.new
+    tmail.content_type = 'text/plain'
+    tmail.charset = 'iso-2022-jp'
+    tmail.date = Time.now
+
     @current_config['kpi'].each do |_k, _v|
       kpi = _k
       @kpi = _v
     end
     
-    tmail.from = @report_user + '+' + [date.to_YYYYMMDD, kpi, ''].join('-') + '@' + $MYDOMAIN
+    tmail.from = [@report_user + '+' + [date.to_YYYYMMDD, kpi, ''].join('-') + '@' + $MYDOMAIN]
     tmail.reply_to = tmail.from
     
     @person = ''
