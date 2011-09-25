@@ -18,7 +18,8 @@ class KPIStatusCalculator
 
   def daily_data(j = 0)
     @bizlog_context.fetch(@date - j)
-    return @bizlog_context.value_at_date(@date - j).value
+    return @bizlog_context.value_at_date(@date - j).value if @bizlog_context.value_at_date(@date - j)
+    nil
   end
   
   def monthly_sum
