@@ -50,29 +50,27 @@ class BizMailReminder
   def remind_for_kpi(&block)
     return if @current_config['type'] == 'aggregated_persons'
 
+    @person = nil
     tmail = TMail::Mail.new
     tmail.content_type = 'text/plain'
     tmail.charset = 'iso-2022-jp'
     tmail.date = Time.now
 
-    @current_config['kpi'].each do |_k, _v|
-      kpi = _k
-      @kpi = _v
+    @current_config['kpi'].each do |k, v|
+      @kpi = v
+      tmail.from = [@report_user + '+' + [date.to_YYYYMMDD, k, ''].join('-') + '@' + $MYDOMAIN]
+      tmail.reply_to = tmail.from
+    
+      tmail.to = @current_config['remind_to']
+      reminder = _gen_remind.split("\n")
+      subject = reminder[0]
+      reminder.shift
+      body = reminder.join("\n")
+      tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('--jis', subject).split(//, 1).pack('m').chomp + '?='
+      tmail.body = NKF.nkf('--jis', body)
+    
+      block.call(tmail)
     end
-    
-    tmail.from = [@report_user + '+' + [date.to_YYYYMMDD, kpi, ''].join('-') + '@' + $MYDOMAIN]
-    tmail.reply_to = tmail.from
-    
-    @person = ''
-    tmail.to = @current_config['remind_to']
-    reminder = _gen_remind.split("\n")
-    subject = reminder[0]
-    reminder.shift
-    body = reminder.join("\n")
-    tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('--jis', subject).split(//, 1).pack('m').chomp + '?='
-    tmail.body = NKF.nkf('--jis', body)
-    
-    block.call(tmail)
   end
   
   def date

@@ -1,7 +1,8 @@
 class CombinedRatioBizLogContext
-  def initialize(bizlog_context1, bizlog_context2)
+  def initialize(kpi, bizlog_context1, bizlog_context2)
     @bizlog_context1 = bizlog_context1
     @bizlog_context2 = bizlog_context2
+    @kpi = kpi
   end
   
   def fetch(start_date, end_date = nil)
@@ -28,4 +29,6 @@ class CombinedRatioBizLogContext
     val2 = @bizlog_context2.value_at_date(date)
     BizLog.new(date, val1.value / val2.value, nil, date)
   end
+  
+  attr_reader :kpi
 end

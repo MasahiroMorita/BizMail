@@ -1,5 +1,5 @@
 require 'report_generator.rb'
-require 'sortablekpi_status.rb'
+
 
 class MultiKPIReportGenerator < ReportGenerator
   def initialize(bizlog_contexts, biztarget_contexts, erb_file)
@@ -14,9 +14,9 @@ class MultiKPIReportGenerator < ReportGenerator
     @bizlog_contexts.each do |b|
       tg = nil
       @biztarget_contexts.each do |t|
-        tg = t if t.kpi = b.kpi
+        tg = t if t && t.kpi == b.kpi
       end
-      @kpi[b.kpi] = KPIStatus(KPICalculator.new(b, date), TargetKPICalculator.new(b, t, date))
+      @kpi[b.kpi] = KPIStatus.new(KPIStatusCalculator.new(b, date), TargetKPICalculator.new(b, tg, date))
     end
     
     super(date)
