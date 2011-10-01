@@ -7,7 +7,9 @@ require 'biz_log_context.rb'
 require 'biz_target_context.rb'
 require 'singlekpi_report_generator.rb'
 require 'aggregated_persons_report_generator.rb'
+require 'combined_ratio_biz_log_context.rb'
 require 'biz_log_status.rb'
+require 'multikpi_report_generator.rb'
 
 class BizMailProcessor
   def initialize
@@ -91,6 +93,31 @@ class BizMailProcessor
     if @current_config['type'] == 'single_kpi' then
       return nil
     elsif @current_config['type'] == 'multi_kpi' then
+      blstat = BizLogStatus.new(@report_user)
+      reported_kpi = blstat.kpi_status(@report_date, @bizmail_person)
+      @current_config['kpi'].each do |k, v|
+        return nil if !reported_kpi.include?(v)
+      end
+      
+      bizlog_contexts = []
+      biztarget_contexts = []
+      @current_config['kpi'].each do |k, v|
+        bizlog_contexts.push(BizLogContext.new(@report_user, v, @bizmail_person))
+        biztarget_contexts.push(BizTargetContext.new(@report_user, v, @bizmail_person))
+      end
+
+      @current_config['combined_kpi'].each do |k, v|
+        if v['type'] == "combined_ratio" then
+          bizlog_contexts.push(CombinedRatioBizLogContext.new(v['name'], 
+              BizLogContext.new(@report_user, @current_config['kpi'][v['kpi'][0]], @bizmail_person),
+              BizLogContext.new(@report_user, @current_config['kpi'][v['kpi'][1]], @bizmail_person)))
+          biztarget_contexts.push(BizTargetContext.new(@report_user, v['name'], @bizmail_person))
+        end
+      end
+
+      report_gen = MultiKPIReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
+      (subject, body) = report_gen.generate_report(@report_date)
+      
     elsif @current_config['type'] == 'aggregated_persons' then
       blstat = BizLogStatus.new(@report_user)
       reported_persons = blstat.person_status(@report_date, @bizmail_kpi)
@@ -108,7 +135,7 @@ class BizMailProcessor
       (subject, body) = report_gen.generate_report(@report_date)
     end
     
-    tmail.to = to_addr_substitute(@current_config['report_to'], @report_from)
+    tmail.to = to_addr_substitute(@current_config['combined_report_to'], @report_from)
     tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('-j', subject).split(//, 1).pack('m').chomp + '?='
     tmail.body = NKF.nkf("--jis", body)
     
@@ -131,13 +158,23 @@ require 'rubygems'
 require 'date'
 require 'date-util'
 
+$MYDOMAIN = "dmail.pgw.jp"
+$BIZMAIL_DIR = "/Users/hiropipi/Documents/workspace/BizMail/"
 $DBFILE = "/Users/hiropipi/Documents/workspace/BizMail/dbfile.sqlite3"
+$CONFIG_YAML = "/Users/hiropipi/Documents/workspace/BizMail/config.yaml"
 
 processor = BizMailProcessor.new
-processor.parse_mail("hiropipi1111@gmail.com", "user01+20110920-k1-p2@dmail.pgw.jp",
-                     Date.new(2011, 9, 20), "THIS IS TEST", "5555")
+processor.parse_mail("hiropipi1111@gmail.com", "multi-test+20110920-k2-@dmail.pgw.jp",
+                     Date.new(2011, 9, 20), "THIS IS TEST", "23")
                      
-processor.generate_report_mail
-processor.generate_combined_report_mail
+processor.generate_report_mail do |tmail|
+  tmail.write_back
+  puts NKF.nkf('--utf8', tmail.encoded)
+end
+
+processor.generate_combined_report_mail do |tmail|
+  tmail.write_back
+  puts NKF.nkf('--utf8', tmail.encoded)
+end
 
 end
