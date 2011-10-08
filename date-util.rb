@@ -20,7 +20,7 @@ class Date
   end
   
   def to_yyyymm
-    self.stftime("%Y年%m月")
+    self.strftime("%Y年%m月")
   end
   
   def to_mmddaaa
