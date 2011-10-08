@@ -13,6 +13,7 @@ class CombinedRatioBizLogContext
   def sum_value
     sum1 = @bizlog_context1.sum_value
     sum2 = @bizlog_context2.sum_value
+    return nil if sum2 == 0
     return sum1 / sum2
   end
   
@@ -27,6 +28,7 @@ class CombinedRatioBizLogContext
   def value_at_date(date)
     val1 = @bizlog_context1.value_at_date(date)
     val2 = @bizlog_context2.value_at_date(date)
+    return nil if val2.value == 0
     BizLog.new(date, val1.value / val2.value, nil, date)
   end
   
