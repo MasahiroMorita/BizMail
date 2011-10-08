@@ -33,6 +33,8 @@ class ReportGenerator
       text = sprintf("%+.1f%%", value * 100.0)
     elsif format == :percent then
       text = sprintf("%.1f%%", value * 100.0)
+    elsif format == :points then
+      text = sprintf("%+.1fpt", value * 100.0)
     end
     
     sp = ' '
