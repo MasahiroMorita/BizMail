@@ -11,7 +11,6 @@ module CachedForwardable
            @_#{ali}_args = args
            @_#{ali} = #{accessor}.__send__(:#{method}, *args,&block)
          rescue Exception
-           $@.delete_if{|s| /^\\(__FORWARDABLE__\\):/ =~ s} unless Forwardable::debug
            Kernel::raise
          end
        end
