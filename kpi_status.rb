@@ -23,6 +23,7 @@ class KPIStatus
   def_delegator :@kpistat_calc, :weekly_average
   def_delegator :@kpistat_calc, :daily_WoW
   def_delegator :@kpistat_calc, :weekly_WoW
+  def_delegator :@kpistat_calc, :monthly_average_diff
   def_delegator :@kpistat_calc, :monthly_remaining_days
   
   def_delegator :@targetkpi_calc, :daily_target
