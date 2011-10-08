@@ -19,6 +19,10 @@ class Date
     self.strftime("%Y/%m/%d") + "(" + self.wday_name + ")"
   end
   
+  def to_yyyymm
+    self.stftime("%Y年%m月")
+  end
+  
   def to_mmddaaa
     self.strftime("%m/%d") + "(" + self.wday_name + ")"
   end

@@ -119,6 +119,17 @@ class KPIStatusCalculator
   def monthly_remaining_days
     return Date.new(@date.year, @date.month, -1).day - @date.day
   end
+  
+  def monthly_average_diff
+    @bizlog_context.fetch(Date.new(@date.year, @date.month, 1), @date)
+    this_month = @bizlog_context.average_value
+    
+    @bizlog_context.fetch(Date.new(@date.year, @date.month-1, 1), Date.new(@date.year, @date.month-1, -1))
+    last_month = @bizlog_context.average_value
+    
+    return nil if this_month == nil || last_month == nil || last_month == 0
+    return this_month - last_month;
+  end
 end
 
 if __FILE__ == $0 then
