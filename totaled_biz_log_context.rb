@@ -26,7 +26,8 @@ class TotaledBizLogContext
   def value_at_date(date)
     sum = 0
     @bizlog_contexts.each do |b|
-      sum += b.value_at_date(date).value
+      v = b.value_at_date(date)
+      sum += v.value if v
     end
     return BizLog.new(date, sum, nil, date)
   end
