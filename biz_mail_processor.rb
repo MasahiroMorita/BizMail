@@ -35,6 +35,7 @@ class BizMailProcessor
         (date, kpi, person) = param.split(/-/)
         @report_date = Date.new(date[0, 4].to_i, date[4, 2].to_i, date[6, 2].to_i)
         @bizmail_kpi = @current_config['kpi'][kpi] if kpi != "" && @current_config['kpi']
+        @bizmail_person = @current_config['item'][person] if person != "" && @current_config['item']
         @bizmail_person = @current_config['person'][person] if person != "" && @current_config['person']
       end
     end
@@ -46,7 +47,6 @@ class BizMailProcessor
     end
     bizlog_context = BizLogContext.new(@report_user, @bizmail_kpi, @bizmail_person)
     bizlog = BizLog.new(@report_date, value, nil)
-    bizlog_context.insert(bizlog)
   end
   
   def generate_report_mail(&block)
@@ -147,8 +147,8 @@ class BizMailProcessor
       bizlog_contexts = []
       biztarget_contexts = []
       @current_config['item'].each do |k, v|
-        bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_kpi, v))
-        biztarget_context.push(BizTargetContext.new(@report_user, @bizmail_kpi, v))
+        bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_item, v))
+        biztarget_context.push(BizTargetContext.new(@report_user, @bizmail_item, v))
       end
       
       report_gen = AggregatedPersonsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
