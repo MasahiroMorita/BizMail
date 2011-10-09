@@ -48,7 +48,7 @@ class BizMailReminder
   end
   
   def remind_for_kpi(&block)
-    return if @current_config['type'] == 'aggregated_persons'
+    return unless @current_config['type'] == 'multi_kpi' or @current_config['type'] == 'single_kpi'
 
     @person = nil
     tmail = TMail::Mail.new
