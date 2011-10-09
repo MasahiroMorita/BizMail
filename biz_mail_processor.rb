@@ -7,6 +7,7 @@ require 'biz_log_context.rb'
 require 'biz_target_context.rb'
 require 'singlekpi_report_generator.rb'
 require 'aggregated_persons_report_generator.rb'
+require 'aggregated_items_report_generator.rb'
 require 'combined_ratio_biz_log_context.rb'
 require 'biz_log_status.rb'
 require 'multikpi_report_generator.rb'
@@ -149,7 +150,7 @@ class BizMailProcessor
       biztarget_contexts = []
       @current_config['item'].each do |k, v|
         bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_item, v))
-        biztarget_context.push(BizTargetContext.new(@report_user, @bizmail_item, v))
+        biztarget_contexts.push(BizTargetContext.new(@report_user, @bizmail_item, v))
       end
       
       report_gen = AggregatedPersonsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
