@@ -51,7 +51,7 @@ class ReportGenerator
     text1 = value_formatter(value1, format1)
     text2 = value_formatter(value2, format2)
     sp = ' '
-    ($TEXT_WIDTH - NKF.nkf('-e', title).lentgh - text1.length - text2.length - 2) do += ' ' end
+    ($TEXT_WIDTH - NKF.nkf('-e', title).length - text1.length - text2.length - 2).times do sp += ' ' end
     
     return title + sp + text1 + ' ' + text2
   end

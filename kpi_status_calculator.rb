@@ -11,6 +11,10 @@ class KPIStatusCalculator
   def person
     @bizlog_context.person
   end
+
+  def item
+    @bizlog_context.item
+  end
   
   def consume_rate
     return @date.day * 1.0 / (Date.new(@date.year, @date.month, -1) - Date.new(@date.year, @date.month, 1) + 1)
@@ -124,11 +128,12 @@ class KPIStatusCalculator
     @bizlog_context.fetch(Date.new(@date.year, @date.month, 1), @date)
     this_month = @bizlog_context.average_value
     
-    @bizlog_context.fetch(Date.new(@date.year, @date.month-1, 1), Date.new(@date.year, @date.month-1, -1))
+    @bizlog_context.fetch(Date.new(@date.year, @date.month-1, 1),
+    			  Date.new(@date.year, @date.month-1, -1))
     last_month = @bizlog_context.average_value
     
     return nil if this_month == nil || last_month == nil || last_month == 0
-    return this_month - last_month;
+    return this_month - last_month
   end
 end
 

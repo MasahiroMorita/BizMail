@@ -38,6 +38,7 @@ class BizMailProcessor
         @bizmail_kpi = @current_config['kpi'][kpi] if kpi != "" && @current_config['kpi']
         @bizmail_person = @current_config['item'][person] if person != "" && @current_config['item']
         @bizmail_person = @current_config['person'][person] if person != "" && @current_config['person']
+	@bizmail_item = @bizmail_person
       end
     end
     
@@ -149,8 +150,8 @@ class BizMailProcessor
       bizlog_contexts = []
       biztarget_contexts = []
       @current_config['item'].each do |k, v|
-        bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_item, v))
-        biztarget_contexts.push(BizTargetContext.new(@report_user, @bizmail_item, v))
+        bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_kpi, v))
+        biztarget_contexts.push(BizTargetContext.new(@report_user, @bizmail_kpi, v))
       end
       
       report_gen = AggregatedItemsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])

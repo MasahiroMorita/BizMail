@@ -10,6 +10,7 @@ class KPIStatus
   
   def_delegator :@kpistat_calc, :kpi
   def_delegator :@kpistat_calc, :person
+  def_delegator :@kpistat_calc, :item
   
   def_delegator :@kpistat_calc, :consume_rate
   def_delegator :@kpistat_calc, :daily_data
