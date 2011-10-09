@@ -18,7 +18,7 @@ class ReportGenerator
     return [subject, body]
   end
   
-  def print_item(title, value, format)
+  def value_formatter(value, format)
     if value == nil then
       text = '---'
     elsif format == :integer then
@@ -36,12 +36,25 @@ class ReportGenerator
     elsif format == :points then
       text = sprintf("%+.1fpt", value * 100.0)
     end
-    
+    return text
+  end
+  
+  def print_item(title, value, format)
+    text = value_formatter(value, format)
     sp = ' '
     ($TEXT_WIDTH - NKF.nkf('-e', title).length - text.length - 1).times do sp += ' ' end
     
     return title + sp + text
   end
 
+  def print_item2(title, value1, format1, value2, format2)
+    text1 = value_formatter(value1, format1)
+    text2 = value_formatter(value2, format2)
+    sp = ' '
+    ($TEXT_WIDTH - NKF.nkf('-e', title).lentgh - text1.length - text2.length - 2) do += ' ' end
+    
+    return title + sp + text1 + ' ' + text2
+  end
+  
   attr_reader :date
 end
