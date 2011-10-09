@@ -27,3 +27,10 @@ reminder.remind_for_kpi do |tmail|
   #puts NKF.nkf('--utf8', tmail.encoded)
   tmail.send_mail
 end
+
+reminder.remind_for_item do |tmail|
+  tmail.smtp_server = 'localhost'
+  tmail.write_back
+  puts NKF.nkf('--utf8', tmail.encoded)
+  #tmail.send_mail
+end

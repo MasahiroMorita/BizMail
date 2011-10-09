@@ -73,6 +73,8 @@ class BizMailProcessor
       else
         return nil
       end
+    elsif @current_config['type'] == 'aggregated_items' then
+      return nil
     end
     
     tmail.to = to_addr_substitute(@current_config['report_to'], @report_from)
@@ -131,8 +133,27 @@ class BizMailProcessor
         bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_kpi, v))
         biztarget_contexts.push(BizTargetContext.new(@report_user, @bizmail_kpi, v))
       end
+      
       report_gen = AggregatedPersonsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
       (subject, body) = report_gen.generate_report(@report_date)
+      
+    elsif @current_config['type'] == 'aggregated_items' then
+      blstat = BizLogStatus.new(@report_user)
+      reported_items = blstat.person_status(@report_date, @bizmail_kpi)
+      @current_config['item'].each do |k, v|
+        return nil if !reported_items.include?(v)
+      end
+      
+      bizlog_contexts = []
+      biztarget_contexts = []
+      @current_config['item'].each do |k, v|
+        bizlog_contexts.push(BizLogContext.new(@report_user, @bizmail_kpi, v))
+        biztarget_context.push(BizTargetContext.new(@report_user, @bizmail_kpi, v))
+      end
+      
+      report_gen = AggregatedPersonsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
+      (subject, body) = report_gen.generate_report(@report_date)
+      
     end
     
     tmail.to = to_addr_substitute(@current_config['combined_report_to'], @report_from)
