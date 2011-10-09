@@ -73,10 +73,47 @@ class BizMailReminder
     end
   end
   
+  def remind_for_item(&block)
+    return if @current_config['type'] != 'aggregated_items'
+    
+    @person = nil
+    tmail = TMail::Mail.new
+    tmail.content_type = 'text/plain'
+    tmail.charset = 'iso-2022-jp'
+    tmail.date = Time.now
+
+    kpi_id = ''
+    @current_config['kpi'].each do |_k, _v|
+      kpi_id = _k
+      @kpi = _v
+    end
+      
+    @current_config['item'].each do |k, v|
+      @item = v
+      
+      tmail.from = [@report_user + '+' + [date.to_YYYYMMDD, kpi_id, k].join('-') + '@' + $MYDOMAIN]
+      tmail.reply_to = tmail.from
+    
+      tmail.to = @current_config['remind_to']
+      reminder = _gen_remind.split("\n")
+      subject = reminder[0]
+      reminder.shift
+      body = reminder.join("\n")
+      tmail.subject = '=?ISO-2022-JP?B?' + NKF.nkf('--jis', subject).split(//, 1).pack('m').chomp + '?='
+      tmail.body = NKF.nkf('--jis', body)
+    
+      block.call(tmail)
+    end
+  end
+  
   def date
     offset = 0
     offset = 1 if @current_config['remind_date'] == 'yesterday'
     return Date.today - offset
+  end
+  
+  def item
+    return @item
   end
   
   def person
