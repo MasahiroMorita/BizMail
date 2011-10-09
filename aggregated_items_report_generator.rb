@@ -23,7 +23,7 @@ class AggregatedItemsReportGenerator < ReportGenerator
     @bizlog_contexts.each do |b|
       tg = nil
       @biztarget_contexts.each do |t|
-        tg = t if t.person == b.person
+        tg = t if t.item == b.item
       end
       @items.push(KPIStatus.new(KPIStatusCalculator.new(b, date), TargetKPICalculator.new(b, tg, date)))
     end

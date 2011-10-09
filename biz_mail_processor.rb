@@ -153,7 +153,7 @@ class BizMailProcessor
         biztarget_contexts.push(BizTargetContext.new(@report_user, @bizmail_item, v))
       end
       
-      report_gen = AggregatedPersonsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
+      report_gen = AggregatedItemsReportGenerator.new(bizlog_contexts, biztarget_contexts, $BIZMAIL_DIR + @current_config['combined_report'])
       (subject, body) = report_gen.generate_report(@report_date)
       
     end
