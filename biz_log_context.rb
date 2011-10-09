@@ -8,6 +8,7 @@ class BizLogContext
     @user = user
     @kpi = kpi
     @person = person
+    @item = person
     @fetched_records = nil
     @fetched_start_date = nil
     @fetched_end_date = nil
@@ -67,7 +68,7 @@ class BizLogContext
     end
   end
   
-  attr_reader :person, :kpi
+  attr_reader :person, :kpi, :item
 end
 
 if __FILE__ == $0 then

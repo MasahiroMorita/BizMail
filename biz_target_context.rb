@@ -8,6 +8,7 @@ class BizTargetContext
     @user = user
     @kpi = kpi
     @person = person
+    @item = person
     @fetched_records = nil
     @fetched_date = nil
     @fetched_period = nil
@@ -48,7 +49,7 @@ class BizTargetContext
     end
   end
   
-  attr_reader :person, :kpi
+  attr_reader :person, :kpi, :item
 end
 
 if __FILE__ == $0 then
