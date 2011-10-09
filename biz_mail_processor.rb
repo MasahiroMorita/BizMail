@@ -47,6 +47,7 @@ class BizMailProcessor
     end
     bizlog_context = BizLogContext.new(@report_user, @bizmail_kpi, @bizmail_person)
     bizlog = BizLog.new(@report_date, value, nil)
+    bizlog_context.insert(bizlog)
   end
   
   def generate_report_mail(&block)
