@@ -63,12 +63,12 @@ begin
   
   if $action == :add && $date then
     record = {:date => $date.to_stdfmt, :user_id => $user, :person_id => $person, :kpi_id => $kpi, :value => $value}
-    db.execute("insert into biz_target_storage values (:id, :date, :user_id, :kpi_id, :person_id, :value)",
+    db.execute("insert into biz_target_storage values (:id, :date, :user_id, :person_id, :kpi_id, :value)",
                 record)
   elsif $action == :add && $start_date && $end_date then
     ($end_date - $start_date + 2).to_i.times do |i|
       record = {:date => ($start_date + i - 1).to_stdfmt, :user_id => $user, :person_id => $person, :kpi_id => $kpi, :value => $value}
-      db.execute("insert into biz_target_storage values (:id, :date, :user_id, :kpi_id, :person_id, :value)",
+      db.execute("insert into biz_target_storage values (:id, :date, :user_id, :person_id, :kpi_id, :value)",
                 record)
     end
   elsif $action == :load_csv then
