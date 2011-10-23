@@ -11,8 +11,8 @@ $date = nil
 $start_date = nil
 $end_date = nil
 $user = nil
-$kpi = nil
-$person = nil
+$kpi = ''
+$person = ''
 $value = nil
 
 parser.on('-a', '--add=VALUE', Float, '目標値を日毎に登録する') do |arg|
